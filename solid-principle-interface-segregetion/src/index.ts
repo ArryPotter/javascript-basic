@@ -5,6 +5,7 @@ interface IVehicle {
     startEngine(): void;
     
     stopEngine(): void;
+
 }
 
 // Interface for heavy-duty vehicle operations
@@ -19,7 +20,7 @@ interface IPassengerVehicle extends IVehicle {
 }
 
 // Car class only deals with passenger functionality
-class Car implements IPassengerVehicle {
+export class Car implements IPassengerVehicle {
     constructor(private brand: string, private model: string) {}
     getDetails(): void {
         console.log(`Car: ${this.brand} ${this.model}`);
@@ -38,13 +39,12 @@ class Car implements IPassengerVehicle {
     }
 }
 
-// Truck class deals with heavy vehicle functionality
-class Truck implements IHeavyVehicle {
-    constructor(private brand: string, private model: string, private capacity: number) {}
+export class Truck implements IHeavyVehicle {
+    private cargoWeight: number = 0;   
+    constructor(private brand: string, private model: string, private maxLoad: number) {}
     getDetails(): void {
-        console.log(`Truck: ${this.brand} ${this.model}, Capacity: ${this.capacity} kg`);
+        console.log(`Truck: ${this.brand} ${this.model}, Max Load: ${this.maxLoad} kg`);
     }
-
     startEngine(): void {
         console.log("Truck engine started.");
     }
@@ -52,9 +52,20 @@ class Truck implements IHeavyVehicle {
         console.log("Truck engine stopped.");
     }
     loadCargo(weight: number): void {
-        console.log(`Loading ${weight} kg of cargo into the truck.`);
+        if (weight <= this.maxLoad) {
+            this.cargoWeight += weight;
+            console.log(`Loaded ${weight} kg of cargo. Current cargo weight: ${this.cargoWeight} kg`);
+        } else {
+            console.log(`Cannot load ${weight} kg. Exceeds max load of ${this.maxLoad} kg.`);
+        }
     }
+    unloadCargo(): void {   
+        console.log(`Unloaded ${this.cargoWeight} kg of cargo.`);
+        this.cargoWeight = 0;
+    }           
 }
+
+
 
 class Main{
     truck: Truck = new Truck("Hino", "Dutro", 1000); 
